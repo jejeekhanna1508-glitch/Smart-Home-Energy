@@ -1,0 +1,293 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Home Energy | AI Analytics</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+</head>
+
+<body>
+
+<div class="app">
+
+    <aside class="sidebar">
+        <div class="logo">
+            <span class="logo-icon">⚡</span>
+            <div>
+                <h2>EcoSmart</h2>
+                <small>ENERGY ANALYTICS</small>
+            </div>
+        </div>
+
+        <div class="menu-title">MENU</div>
+
+        <nav>
+            <a href="#dashboard" class="nav-link active">▦ Dashboard</a>
+            <a href="#upload" class="nav-link">⇧ Data Upload</a>
+            <a href="#analysis" class="nav-link">▥ Analysis</a>
+            <a href="#classification" class="nav-link">◈ Classification</a>
+            <a href="#prediction" class="nav-link">⌁ Prediction</a>
+            <a href="#recommendations" class="nav-link">✧ Recommendations</a>
+        </nav>
+
+        <div class="sidebar-bottom">
+            <div class="eco-card">
+                <span>🌱</span>
+                <h3>Save Energy</h3>
+                <p>Small changes today create a greener tomorrow.</p>
+            </div>
+            <p class="sidebar-footer">Smart Home Energy v1.0</p>
+        </div>
+    </aside>
+
+    <main class="main">
+
+        <header class="topbar">
+            <div>
+                <h1>Energy Dashboard</h1>
+                <p>Monitor, analyse and predict your home electricity consumption.</p>
+            </div>
+            <div class="top-actions">
+                <span class="status"><span class="dot"></span> System Online</span>
+                <div class="profile">🏠</div>
+            </div>
+        </header>
+
+        <section id="dashboard">
+            <div class="welcome">
+                <div>
+                    <h2>Welcome to EcoSmart 👋</h2>
+                    <p>Understand your electricity usage and make smarter energy decisions.</p>
+                </div>
+                <button class="primary-btn" onclick="document.getElementById('upload').scrollIntoView({behavior:'smooth'})">
+                    + Upload Dataset
+                </button>
+            </div>
+
+            <div class="stats-grid">
+
+                <div class="stat-card">
+                    <div class="stat-top">
+                        <span>Total Consumption</span>
+                        <span class="stat-icon green">⚡</span>
+                    </div>
+                    <h2 id="totalConsumption">0 kWh</h2>
+                    <p>All uploaded readings</p>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-top">
+                        <span>Average Daily Usage</span>
+                        <span class="stat-icon blue">▤</span>
+                    </div>
+                    <h2 id="averageConsumption">0 kWh</h2>
+                    <p>Average per day</p>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-top">
+                        <span>Energy Category</span>
+                        <span class="stat-icon orange">◈</span>
+                    </div>
+                    <h2 id="energyCategory">--</h2>
+                    <p>Based on average usage</p>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-top">
+                        <span>Next Month Prediction</span>
+                        <span class="stat-icon purple">⌁</span>
+                    </div>
+                    <h2 id="predictedConsumption">0 kWh</h2>
+                    <p>Estimated consumption</p>
+                </div>
+
+            </div>
+        </section>
+
+        <section id="upload" class="section">
+            <div class="section-heading">
+                <div>
+                    <h2>Dataset Upload</h2>
+                    <p>Upload your historical electricity consumption CSV file.</p>
+                </div>
+            </div>
+
+            <div class="upload-card">
+                <div class="upload-icon">☁</div>
+                <h3>Upload Electricity Dataset</h3>
+                <p>Choose a CSV file containing date and electricity consumption readings.</p>
+
+                <label for="csvFile" class="upload-btn">Choose CSV File</label>
+                <input type="file" id="csvFile" accept=".csv">
+
+                <p id="fileName" class="file-name">No file selected</p>
+
+                <div class="upload-info">
+                    <span>✓ CSV format</span>
+                    <span>✓ Date column</span>
+                    <span>✓ Consumption column (kWh)</span>
+                </div>
+
+                <button id="sampleBtn" class="secondary-btn">Load Sample Dataset</button>
+                <p id="uploadStatus" class="upload-status">Sample data is displayed initially.</p>
+            </div>
+        </section>
+
+        <section id="analysis" class="section">
+            <div class="section-heading">
+                <div>
+                    <h2>Consumption Analysis</h2>
+                    <p>Visualise your electricity usage patterns.</p>
+                </div>
+                <select id="chartFilter">
+                    <option value="daily">Daily</option>
+                    <option value="weekly">Weekly</option>
+                    <option value="monthly">Monthly</option>
+                </select>
+            </div>
+
+            <div class="chart-card">
+                <div class="chart-title">
+                    <div>
+                        <h3>Electricity Consumption</h3>
+                        <p>Historical energy usage in kWh</p>
+                    </div>
+                    <span class="chart-label">● Consumption</span>
+                </div>
+                <div class="chart-container">
+                    <canvas id="consumptionChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <section id="classification" class="section">
+            <div class="section-heading">
+                <div>
+                    <h2>Energy Classification</h2>
+                    <p>Understand your household energy consumption level.</p>
+                </div>
+            </div>
+
+            <div class="classification-grid">
+
+                <div class="classification-card">
+                    <span class="class-icon">◈</span>
+                    <h3>Current Classification</h3>
+                    <h1 id="classificationResult">--</h1>
+                    <p id="classificationDescription">Upload data to analyse energy consumption.</p>
+                </div>
+
+                <div class="classification-card category-card">
+                    <h3>Energy Usage Categories</h3>
+
+                    <div class="category-item">
+                        <span class="category-dot low"></span>
+                        <div>
+                            <strong>Low Consumption</strong>
+                            <small>Lower than 33rd percentile</small>
+                        </div>
+                    </div>
+
+                    <div class="category-item">
+                        <span class="category-dot medium"></span>
+                        <div>
+                            <strong>Medium Consumption</strong>
+                            <small>Between 33rd and 67th percentile</small>
+                        </div>
+                    </div>
+
+                    <div class="category-item">
+                        <span class="category-dot high"></span>
+                        <div>
+                            <strong>High Consumption</strong>
+                            <small>Above 67th percentile</small>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <section id="prediction" class="section">
+            <div class="section-heading">
+                <div>
+                    <h2>Future Energy Prediction</h2>
+                    <p>Estimated electricity consumption for upcoming days.</p>
+                </div>
+            </div>
+
+            <div class="chart-card">
+                <div class="chart-title">
+                    <div>
+                        <h3>Consumption Forecast</h3>
+                        <p>Historical readings and estimated future usage</p>
+                    </div>
+                    <span class="prediction-label">● Forecast</span>
+                </div>
+
+                <div class="chart-container">
+                    <canvas id="predictionChart"></canvas>
+                </div>
+
+                <div class="prediction-summary">
+                    <div>
+                        <small>Estimated next 7 days</small>
+                        <h2 id="weeklyPrediction">0 kWh</h2>
+                    </div>
+                    <div>
+                        <small>Estimated next 30 days</small>
+                        <h2 id="monthlyPrediction">0 kWh</h2>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="recommendations" class="section">
+            <div class="section-heading">
+                <div>
+                    <h2>Energy Saving Recommendations</h2>
+                    <p>Suggestions based on your electricity usage.</p>
+                </div>
+            </div>
+
+            <div id="recommendationList" class="recommendation-grid">
+                <div class="recommendation">
+                    <span>💡</span>
+                    <h3>Use LED Lighting</h3>
+                    <p>Replace traditional bulbs with energy-efficient LED lights.</p>
+                </div>
+                <div class="recommendation">
+                    <span>❄️</span>
+                    <h3>Optimise AC Usage</h3>
+                    <p>Set your air conditioner to an efficient temperature.</p>
+                </div>
+                <div class="recommendation">
+                    <span>🔌</span>
+                    <h3>Switch Off Devices</h3>
+                    <p>Disconnect unused electrical appliances.</p>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <p>© 2026 EcoSmart | Smart Home Energy Consumption Classification and Prediction</p>
+            <p>Powered by Data Analytics & Machine Learning</p>
+        </footer>
+
+    </main>
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>
